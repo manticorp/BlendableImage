@@ -11,6 +11,7 @@
             "email": "manticorp1234@gmail.com"
         }
     ],
+    "license": "MIT",
     "autoload": {
         "psr-4": {
             "Manticorp\\": "src/"
