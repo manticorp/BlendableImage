@@ -22,14 +22,6 @@ $top->setDimensions($base->getDimensions());
 $opacity = 1;
 $fill    = 1; // Currently not implemented
 
-// echo "<pre>";
-// var_dump($modes);
-// print_r($modes);
-// foreach($modes as $mode){
-//     echo "<h2>".$mode."</h2>";
-// }
-// die();
-
 foreach($modes as $mode){
     echo "<div style='width:100px;height:130px;float:left;'><h1 style='font-size: 12px;'>".$mode."</h1>";
 

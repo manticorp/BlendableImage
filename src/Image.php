@@ -67,7 +67,7 @@ class Image
 
     public static function hasImagick()
     {
-        return false;
+        // return false;
         return extension_loaded('imagick');
     }
 
