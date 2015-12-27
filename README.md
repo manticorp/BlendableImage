@@ -10,7 +10,11 @@ This is mostly due to PHP having to iterate over every pixel.
 
 # Installation
 
-## TODO packagist installation with composer
+simply require the package in composer
+
+```
+composer require manticorp/image
+```
 
 # Usage
 
