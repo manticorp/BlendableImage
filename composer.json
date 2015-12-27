@@ -1,0 +1,19 @@
+{
+    "name": "manticorp/image",
+    "description": "Image library for layer like blending of images in PHP",
+    "require": {
+        "php": ">=5.3.0"
+    },
+    "minimum-stability": "dev",
+    "authors": [
+        {
+            "name": "Harry Mustoe-Playfair",
+            "email": "manticorp1234@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Manticorp\\": "src/"
+        }
+    }
+}
