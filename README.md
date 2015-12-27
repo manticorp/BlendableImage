@@ -71,6 +71,33 @@ foreach($modes as $mode){
 }
 ```
 
+## Magic Methods
+
+An array of magic methods are also available
+
+```php
+<?php
+$filename1 = 'baseimage.png';
+$filename2 = 'topimage.png';
+
+$modes = Manticorp\Image::getAvailableBlendingModes();
+
+$base = new Manticorp\Image($filename1);
+$top  = new Manticorp\Image($filename2);
+
+$dim = 200;
+
+$base->setDimensions($dim, $dim);
+$top->setDimensions($base->getDimensions());
+
+$opacity = 1;
+$fill    = 1; // Currently not implemented
+
+$base->overlayWith($top, $opacity, $fill);
+
+echo $base;
+```
+
 ## Available blending modes
 
 * Add
