@@ -1,7 +1,7 @@
 <?php
 namespace Manticorp\Image\Blender;
 
-class VividLight extends \Image\Blender
+class VividLight extends \Manticorp\Image\Blender
 {
     public function _blend($opacity = 1, $fill = 1)
     {

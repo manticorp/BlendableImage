@@ -1,7 +1,7 @@
 <?php
 namespace Manticorp\Image\Blender;
 
-class Divide extends \Image\Blender
+class Divide extends \Manticorp\Image\Blender
 {
     public function _blend($opacity = 1, $fill = 1)
     {

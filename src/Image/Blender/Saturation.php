@@ -1,7 +1,7 @@
 <?php
 namespace Manticorp\Image\Blender;
 
-class Saturation extends \Image\Blender
+class Saturation extends \Manticorp\Image\Blender
 {
     public function _blend($opacity = 1, $fill = 1)
     {

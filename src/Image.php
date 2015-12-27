@@ -28,7 +28,7 @@ class Image
 
     public function __construct($fn = null)
     {
-        $this->hasImagick  = extension_loaded('imagick');
+        $this->hasImagick  = self::hasImagick();
 
         if($fn !== null){
             $this->setFile($fn);
@@ -38,7 +38,9 @@ class Image
 
     public function __destruct()
     {
-        @ imagedestroy($this->image);
+        if(!self::hasImagick()){
+            @ imagedestroy($this->image);
+        }
     }
 
     public function __call($method, $arguments)
@@ -61,6 +63,44 @@ class Image
     public function __clone()
     {
         $this->image = $this->getImageResource($this->fn);
+    }
+
+    public static function hasImagick()
+    {
+        return false;
+        return extension_loaded('imagick');
+    }
+
+    public static function getAvailableBlendingModes()
+    {
+        $blendingModes = array();
+
+        $classFiles = glob(__DIR__ . '/Image/Blender/*');
+
+        foreach($classFiles as $file){
+            $blendingModes[] = pathinfo($file, PATHINFO_FILENAME);
+        }
+
+        if(self::hasImagick()) {
+            $class = new \ReflectionClass('Imagick');
+            $constants = $class->getConstants();
+            $needle = 'COMPOSITE_';
+            foreach($constants as $constant => $value){
+                if(self::stringStartsWith($constant, $needle)){
+                    $blendingModes[] = ucfirst(strtolower(str_replace($needle, '', $constant)));
+                }
+            }
+        }
+
+        $blendingModes = array_unique($blendingModes);
+        sort($blendingModes, false);
+
+        return $blendingModes;
+    }
+
+    public static function stringStartsWith($haystack, $needle)
+    {
+        return $needle === "" || strrpos($haystack, $needle, -strlen($haystack)) !== FALSE;
     }
 
     public function resize()
@@ -150,7 +190,7 @@ class Image
         }
         $this->resize();
         $mode = str_replace(" ","",ucwords(trim($mode)));
-        $class = 'Image\\Blender\\'.$mode;
+        $class = '\\Manticorp\\Image\\Blender\\'.$mode;
         if(class_exists($class)) {
             $blender = new $class($this, $image);
             $this->setImage($blender->blend($opacity, $fill));
@@ -171,16 +211,16 @@ class Image
      */
     public function generateOutputFile()
     {
+        if(file_exists($this->outputFn)){
+            unlink($this->outputFn);
+        }
         if(in_array($this->outputType, array_keys($this->allowedFileTypes))) {
             if($this->hasImagick){
-                // $this->image->setImageCompressionQuality(max(0,min($this->quality*10,100)))
+                $this->image->setImageCompressionQuality(max(0,min($this->quality*10,100)));
                 $fn = realpath(pathinfo($this->outputFn, PATHINFO_DIRNAME)) . DIRECTORY_SEPARATOR .  pathinfo($this->outputFn, PATHINFO_BASENAME);
                 $this->image->writeImage($fn);
             } else {
                 $function = 'image'.$this->allowedFileTypes[$this->outputType];
-                if(file_exists($this->outputFn)){
-                    unlink($this->outputFn);
-                }
                 $function($this->getImage(), $this->outputFn, $this->quality);
             }
         } else {
@@ -277,10 +317,10 @@ class Image
 
     public function getImgTag()
     {
-        if(is_null($this->getOutputFn()) || ($this->getHasChanged() && file_exists($this->getOutputFn()))){
+        if(is_null($this->getOutputFn())){
             $this->generateRandomFileName();
         }
-        if(!file_exists($this->getOutputFn())){
+        if(!file_exists($this->getOutputFn()) || $this->hasChanged){
             $this->generateOutputFile();
         }
         return '<img src="' . $this->outputFn . '" />'.PHP_EOL;
@@ -421,6 +461,9 @@ class Image
     public function setOutputFn($outputFn)
     {
         $this->outputFn = $outputFn;
+        if(pathinfo($outputFn,PATHINFO_EXTENSION)){
+            $this->outputType = pathinfo($outputFn,PATHINFO_EXTENSION);
+        }
 
         return $this;
     }

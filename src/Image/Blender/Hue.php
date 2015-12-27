@@ -1,7 +1,7 @@
 <?php
 namespace Manticorp\Image\Blender;
 
-class Hue extends \Image\Blender
+class Hue extends \Manticorp\Image\Blender
 {
     public function _blend($opacity = 1, $fill = 1)
     {

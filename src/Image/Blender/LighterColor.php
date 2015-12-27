@@ -1,7 +1,7 @@
 <?php
 namespace Manticorp\Image\Blender;
 
-class LighterColor extends \Image\Blender
+class LighterColor extends \Manticorp\Image\Blender
 {
     public function _blend($opacity = 1, $fill = 1)
     {

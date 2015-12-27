@@ -8,7 +8,7 @@ class Blender
     public $hasImagick;
 
     public function __construct(\Manticorp\Image $base, \Manticorp\Image $top){
-        $this->hasImagick  = extension_loaded('imagick');
+        $this->hasImagick  = \Manticorp\Image::hasImagick();
         $this->base = $base;
         $this->top  = clone $top;
     }

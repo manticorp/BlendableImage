@@ -1,7 +1,7 @@
 <?php
 namespace Manticorp\Image\Blender;
 
-class LinearBurn extends \Image\Blender
+class LinearBurn extends \Manticorp\Image\Blender
 {
     public function _blend($opacity = 1, $fill = 1)
     {
