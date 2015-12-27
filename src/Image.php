@@ -3,19 +3,19 @@ namespace Manticorp;
 
 class Image
 {
-    public  $fn;
-    public  $image;
-    public  $isTrueColor;
+    public $fn;
+    public $image;
+    public $isTrueColor;
     private $originalWidth;
     private $originalHeight;
-    public  $width;
-    public  $height;
-    public  $outputFn;
-    public  $outputType = 'png';
-    public  $quality = 9;
+    public $width;
+    public $height;
+    public $outputFn;
+    public $outputType = 'png';
+    public $quality = 9;
     private $needsResize = false;
     private $hasChanged  = true;
-    public  $hasImagick;
+    public $hasImagick;
 
     private $allowedFileTypes = array(
         'png'   => 'png',
@@ -30,7 +30,7 @@ class Image
     {
         $this->hasImagick  = self::hasImagick();
 
-        if($fn !== null){
+        if ($fn !== null) {
             $this->setFile($fn);
         }
         return $this;
@@ -38,20 +38,20 @@ class Image
 
     public function __destruct()
     {
-        if(!self::hasImagick()){
+        if (!self::hasImagick()) {
             @ imagedestroy($this->image);
         }
     }
 
     public function __call($method, $arguments)
     {
-        if(substr($method, -4) === "With"){
-            $blendType = substr($method,0,-4);
+        if (substr($method, -4) === "With") {
+            $blendType = substr($method, 0, -4);
             $newArgs = array($arguments[0],$blendType);
-            for($i = 1; $i < count($arguments); $i++){
+            for ($i = 1; $i < count($arguments); $i++) {
                 $newArgs[] = $arguments[$i];
             }
-            return call_user_func_array(array($this,'blendWith'),$newArgs);
+            return call_user_func_array(array($this,'blendWith'), $newArgs);
         }
     }
 
@@ -77,16 +77,16 @@ class Image
 
         $classFiles = glob(__DIR__ . '/Image/Blender/*');
 
-        foreach($classFiles as $file){
+        foreach ($classFiles as $file) {
             $blendingModes[] = pathinfo($file, PATHINFO_FILENAME);
         }
 
-        if(self::hasImagick()) {
+        if (self::hasImagick()) {
             $class = new \ReflectionClass('Imagick');
             $constants = $class->getConstants();
             $needle = 'COMPOSITE_';
-            foreach($constants as $constant => $value){
-                if(self::stringStartsWith($constant, $needle)){
+            foreach ($constants as $constant => $value) {
+                if (self::stringStartsWith($constant, $needle)) {
                     $blendingModes[] = ucfirst(strtolower(str_replace($needle, '', $constant)));
                 }
             }
@@ -100,13 +100,13 @@ class Image
 
     public static function stringStartsWith($haystack, $needle)
     {
-        return $needle === "" || strrpos($haystack, $needle, -strlen($haystack)) !== FALSE;
+        return $needle === "" || strrpos($haystack, $needle, -strlen($haystack)) !== false;
     }
 
     public function resize()
     {
-        if($this->needsResize){
-            if($this->hasImagick){
+        if ($this->needsResize) {
+            if ($this->hasImagick) {
                 $success = $this->image->scaleimage(
                     $this->getWidth(),
                     $this->getHeight()/*,
@@ -114,12 +114,12 @@ class Image
                     1,
                     false*/
                 );
-                if($success !== true) {
+                if ($success !== true) {
                     throw new \Exception('Failed to resize image.');
                 }
             } else {
                 $success = imagescale($this->image, $this->width, $this->height, IMG_BILINEAR_FIXED);
-                if($success !== false) {
+                if ($success !== false) {
                     $this->image = $success;
                 }
             }
@@ -137,13 +137,13 @@ class Image
      */
     public function getImageResource($fn)
     {
-        if($this->hasImagick){
+        if ($this->hasImagick) {
             $image = new \Imagick();
             $image->readImage(realpath($fn));
         } else {
-            $filetype = explode(".",$fn);
+            $filetype = explode(".", $fn);
             $filetype = $filetype[count($filetype)-1];
-            if(in_array($filetype, array_keys($this->allowedFileTypes))) {
+            if (in_array($filetype, array_keys($this->allowedFileTypes))) {
                 $function = 'imagecreatefrom'.$this->allowedFileTypes[$filetype];
                 $image    = $function($fn);
             } else {
@@ -160,9 +160,9 @@ class Image
      */
     public function loadImage()
     {
-        if(is_file($this->fn)){
+        if (is_file($this->fn)) {
             $this->image = $this->getImageResource($this->fn);
-            if(!$this->hasImagick && !is_null($this->image)){
+            if (!$this->hasImagick && !is_null($this->image)) {
                 $this->isTrueColor    = imageistruecolor($this->image);
                 $this->originalWidth  = imagesx($this->image);
                 $this->originalHeight = imagesy($this->image);
@@ -184,17 +184,17 @@ class Image
      */
     public function blendWith(\Manticorp\Image $image, $mode = 'normal', $opacity = 1, $fill = 1)
     {
-        if(is_numeric($mode)){
+        if (is_numeric($mode)) {
             $fill = $opacity;
             $opacity = $mode;
         }
         $this->resize();
-        $mode = str_replace(" ","",ucwords(trim($mode)));
+        $mode = str_replace(" ", "", ucwords(trim($mode)));
         $class = '\\Manticorp\\Image\\Blender\\'.$mode;
-        if(class_exists($class)) {
+        if (class_exists($class)) {
             $blender = new $class($this, $image);
             $this->setImage($blender->blend($opacity, $fill));
-        } else if($this->hasImagick) {
+        } else if ($this->hasImagick) {
             $blender = new Image\Blender($this, $image);
             $this->setImage($blender->genericBlend($opacity, $fill, $mode));
         } else {
@@ -211,12 +211,12 @@ class Image
      */
     public function generateOutputFile()
     {
-        if(file_exists($this->outputFn)){
+        if (file_exists($this->outputFn)) {
             unlink($this->outputFn);
         }
-        if(in_array($this->outputType, array_keys($this->allowedFileTypes))) {
-            if($this->hasImagick){
-                $this->image->setImageCompressionQuality(max(0,min($this->quality*10,100)));
+        if (in_array($this->outputType, array_keys($this->allowedFileTypes))) {
+            if ($this->hasImagick) {
+                $this->image->setImageCompressionQuality(max(0, min($this->quality*10, 100)));
                 $fn = realpath(pathinfo($this->outputFn, PATHINFO_DIRNAME)) . DIRECTORY_SEPARATOR .  pathinfo($this->outputFn, PATHINFO_BASENAME);
                 $this->image->writeImage($fn);
             } else {
@@ -255,11 +255,11 @@ class Image
 
     public function setDimensions($width, $height = null)
     {
-        if(is_array($width)){
+        if (is_array($width)) {
             $height = $width['y'];
             $width  = $width['x'];
         }
-        if($height == null){
+        if ($height == null) {
             $height = $width * ($this->originalHeight/$this->originalWidth);
         }
         $this->setWidth($width);
@@ -289,7 +289,7 @@ class Image
 
     public function generateRandomFileName()
     {
-        if(!file_exists('./tmp')){
+        if (!file_exists('./tmp')) {
             mkdir('./tmp');
         }
         $this->setOutputFn('./tmp/'.(rand()*1000).'.'.$this->outputType);
@@ -304,7 +304,7 @@ class Image
 
     public function setFile($fn)
     {
-        if(is_file($fn)){
+        if (is_file($fn)) {
             $this->fn = $fn;
             $this->loadImage();
             $this->setWidth($this->getOriginalWidth());
@@ -315,15 +315,42 @@ class Image
         return $this;
     }
 
-    public function getImgTag()
+    public function getImgTag($url = null, $attributes = null)
     {
-        if(is_null($this->getOutputFn())){
+        if (is_null($this->getOutputFn())) {
             $this->generateRandomFileName();
         }
-        if(!file_exists($this->getOutputFn()) || $this->hasChanged){
+        if (!file_exists($this->getOutputFn()) || $this->hasChanged) {
             $this->generateOutputFile();
         }
-        return '<img src="' . $this->outputFn . '" />'.PHP_EOL;
+
+        $url = (!is_null($url)) ?:$this->outputFn;
+
+        $attributeString = '';
+        foreach ($attributes as $key => $val) {
+            $attributeString .= ' ' . $key . '="' .$val . '"';
+        }
+        return '<img src="' . $url . '"' . $attributes . ' />'.PHP_EOL;
+    }
+
+    public function blob($withHeaders = true)
+    {
+        if ($withHeaders) {
+            header('Content-Type: image/'.$this->outputType);
+        }
+        if (in_array($this->outputType, array_keys($this->allowedFileTypes))) {
+            if ($this->hasImagick) {
+                $this->image->setImageFormat($this->outputType);
+                echo $this->image->getImageBlob();
+            } else {
+                $function = 'image'.$this->allowedFileTypes[$this->outputType];
+                $function($this->getImage(), null, $this->quality);
+                imagedestroy($this->image);
+            }
+        } else {
+            throw new \InvalidArgumentException("Invalid filetype " . $this->outputType);
+        }
+        return $this;
     }
 
     public function getImage()
@@ -461,8 +488,8 @@ class Image
     public function setOutputFn($outputFn)
     {
         $this->outputFn = $outputFn;
-        if(pathinfo($outputFn,PATHINFO_EXTENSION)){
-            $this->outputType = pathinfo($outputFn,PATHINFO_EXTENSION);
+        if (pathinfo($outputFn, PATHINFO_EXTENSION)) {
+            $this->outputType = pathinfo($outputFn, PATHINFO_EXTENSION);
         }
 
         return $this;
