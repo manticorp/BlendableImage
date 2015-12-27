@@ -2,7 +2,11 @@
 
 An image library that gives photoshop-like layer blending image capabilities.
 
-Requires EITHER the PHP GD image library (slow) OR Imagick (fast!)
+Requires EITHER the PHP GD image library (VERY slow) OR Imagick (fast!)
+
+As an example, using GD image library on my i7 computer with 16GB ram, blending two 500px square images takes over 4 seconds.
+
+This is mostly due to PHP having to iterate over every pixel.
 
 # Installation
 
@@ -66,3 +70,86 @@ foreach($modes as $mode){
     echo "</div>";
 }
 ```
+
+## Available blending modes
+
+* Add
+* Atop
+* Blend
+* Blur
+* BumpMap
+* ChangeMask
+* Clear
+* Color
+* ColorBurn
+* ColorDodge
+* Colorize
+* Copy
+* CopyBlack
+* CopyBlue
+* CopyCyan
+* CopyGreen
+* CopyMagenta
+* CopyOpacity
+* CopyRed
+* CopyYellow
+* Darken
+* DarkenIntensity
+* DarkerColor
+* Default
+* Difference
+* Displace
+* Dissolve
+* Distort
+* Divide
+* DivideDST
+* DivideSrc
+* DST
+* DSTatop
+* DSTin
+* DSTout
+* DSTover
+* Exclusion
+* HardLight
+* HardMix
+* Hue
+* In
+* Lighten
+* LightenIntensity
+* LighterColor
+* LinearBurn
+* LinearDodge
+* LinearLight
+* Luminize
+* Luminosity
+* Mathematics
+* Minus
+* MinusDST
+* MinusSrc
+* Modulate
+* ModulusAdd
+* ModulusSubtract
+* Multiply
+* No
+* Normal
+* Out
+* Over
+* Overlay
+* Pegtoplight
+* PinLight
+* Plus
+* Replace
+* Saturate
+* Saturation
+* Screen
+* SoftLight
+* Src
+* SrcAtop
+* SrcIn
+* SrcOut
+* SrcOver
+* Subtract
+* Threshold
+* Undefined
+* VividLight
+* Xor

@@ -7,6 +7,10 @@ require_once __DIR__ . '/../vendor/autoload.php'; // Autoload files using Compos
 
 $modes = Manticorp\Image::getAvailableBlendingModes();
 
+foreach($modes as $mode){
+    echo ' * ' . $mode . "<br>";
+}
+
 $filename1 = __DIR__ . '/resources/pattern1.png';
 $filename2 = __DIR__ . '/resources/poplin_small.png';
 
