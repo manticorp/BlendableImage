@@ -5,9 +5,9 @@ class Color extends \Manticorp\Image\Blender
 {
     public function _blend($opacity = 1, $fill = 1)
     {
-        $opacity = min(max($opacity,0),1);
+        $opacity = min(max($opacity, 0), 1);
 
-        if($opacity === 0){
+        if ($opacity === 0) {
             return $this->base->getImage();
         }
 
@@ -26,8 +26,8 @@ class Color extends \Manticorp\Image\Blender
         for ($x = 0; $x < $w; ++$x) {
             for ($y = 0; $y < $h; ++$y) {
 
-                $baseColor = $this->getColorAtPixel($baseImg,    $x + $destX, $y + $destY, $baseIsTrueColor);
-                $topColor  = $this->getColorAtPixel($overlayImg, $x,          $y,          $topIsTrueColor );
+                $baseColor = $this->getColorAtPixel($baseImg, $x + $destX, $y + $destY, $baseIsTrueColor);
+                $topColor  = $this->getColorAtPixel($overlayImg, $x, $y, $topIsTrueColor);
 
                 // First get the colors for the base and top pixels.
                 $destColor = $baseColor = $this->normalisePixel($baseColor);
@@ -40,11 +40,11 @@ class Color extends \Manticorp\Image\Blender
                 $destColor = $this->hslToRgb($destHsl);
                 $destColor['alpha'] = $baseColor['alpha'];
 
-                if($opacity !== 1) {
+                if ($opacity !== 1) {
                     $destColor = $this->opacityPixel($baseColor, $destColor, $opacity);
                 }
                 // ...I wonder if this will work...
-                if($topColor['alpha'] != 0) {
+                if ($topColor['alpha'] != 0) {
                     $destColor = $this->opacityPixel($baseColor, $destColor, 1-$topColor['alpha']);
                 }
 
@@ -53,7 +53,8 @@ class Color extends \Manticorp\Image\Blender
                 // Now that we have a valid color index, set the pixel to that color.
                 imagesetpixel(
                     $baseImg,
-                    $x + $destX, $y + $destY,
+                    $x + $destX,
+                    $y + $destY,
                     $this->getColorIndex($baseImg, $destColor)
                 );
             }

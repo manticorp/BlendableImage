@@ -5,9 +5,9 @@ class VividLight extends \Manticorp\Image\Blender
 {
     public function _blend($opacity = 1, $fill = 1)
     {
-        $opacity = min(max($opacity,0),1);
+        $opacity = min(max($opacity, 0), 1);
 
-        if($opacity === 0){
+        if ($opacity === 0) {
             return $this->base->getImage();
         }
 
@@ -32,13 +32,14 @@ class VividLight extends \Manticorp\Image\Blender
                 );
 
                 $destColor = $baseColor;
-                foreach($destColor as $key => &$color){
-                    if($color > 0.5 && $color < 1)
+                foreach ($destColor as $key => &$color) {
+                    if ($color > 0.5 && $color < 1) {
                         $color = ($topColor[$key]/(1-$color));
-                    else if ($color > 0)
+                    } else if ($color > 0) {
                         $color = 1-((1-$topColor[$key])/$color);
+                    }
                 }
-                if($opacity !== 1) {
+                if ($opacity !== 1) {
                     $destColor = $this->opacityPixel($baseColor, $destColor, $opacity);
                 }
 
@@ -47,7 +48,8 @@ class VividLight extends \Manticorp\Image\Blender
                 // Now that we have a valid color index, set the pixel to that color.
                 imagesetpixel(
                     $baseImg,
-                    $x + $destX, $y + $destY,
+                    $x + $destX,
+                    $y + $destY,
                     $this->getColorIndex($baseImg, $destColor)
                 );
             }

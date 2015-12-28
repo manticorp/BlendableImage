@@ -17,9 +17,13 @@ class Overlay extends \Manticorp\Image\Blender
             $baseImg, // destination
             $this->top->getImage(), // source
             // destination x and y
-            $destX, $destY,
+            $destX,
+            $destY,
             // x, y, width, and height of the area of the source to copy
-            0, 0, $this->base->getWidth(), $this->base->getHeight()
+            0,
+            0,
+            $this->base->getWidth(),
+            $this->base->getHeight()
         );
         // } OVERLAY
         return $baseImg;

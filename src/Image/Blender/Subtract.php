@@ -5,9 +5,9 @@ class Subtract extends \Manticorp\Image\Blender
 {
     public function _blend($opacity = 1, $fill = 1)
     {
-        $opacity = min(max($opacity,0),1);
+        $opacity = min(max($opacity, 0), 1);
 
-        if($opacity === 0){
+        if ($opacity === 0) {
             return $this->base->getImage();
         }
 
@@ -33,10 +33,10 @@ class Subtract extends \Manticorp\Image\Blender
 
                 // B−A
                 $destColor = $baseColor;
-                foreach($destColor as $key => &$color){
-                    $color = max($topColor[$key] - $color,0);
+                foreach ($destColor as $key => &$color) {
+                    $color = max($topColor[$key] - $color, 0);
                 }
-                if($opacity !== 1) {
+                if ($opacity !== 1) {
                     $destColor = $this->opacityPixel($baseColor, $destColor, $opacity);
                 }
 
@@ -45,7 +45,8 @@ class Subtract extends \Manticorp\Image\Blender
                 // Now that we have a valid color index, set the pixel to that color.
                 imagesetpixel(
                     $baseImg,
-                    $x + $destX, $y + $destY,
+                    $x + $destX,
+                    $y + $destY,
                     $this->getColorIndex($baseImg, $destColor)
                 );
             }

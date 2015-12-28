@@ -7,7 +7,8 @@ class Blender
     public $top;
     public $hasImagick;
 
-    public function __construct(\Manticorp\Image $base, \Manticorp\Image $top){
+    public function __construct(\Manticorp\Image $base, \Manticorp\Image $top)
+    {
         $this->hasImagick  = \Manticorp\Image::hasImagick();
         $this->base = $base;
         $this->top  = clone $top;
@@ -15,8 +16,8 @@ class Blender
 
     public function blend($opacity = 1, $fill = 1)
     {
-        if($this->hasImagick){
-            if(method_exists($this, '_imagickBlend')){
+        if ($this->hasImagick) {
+            if (method_exists($this, '_imagickBlend')) {
                 return call_user_func_array(array($this, '_imagickBlend'), func_get_args());
             } else {
                 throw new \InvalidArgumentException('Blend type not available when Imagick extension is loaded - sorry!');
@@ -26,14 +27,15 @@ class Blender
         }
     }
 
-    public function _blend($opacity = 1, $fill = 1) {
+    public function _blend($opacity = 1, $fill = 1)
+    {
         return $this->base;
     }
 
     public function genericBlend($opacity = 1, $fill = 1, $mode = 'COPY')
     {
         $class = new \ReflectionClass("\Imagick");
-        if($class->hasConstant('COMPOSITE_'.strtoupper($mode))){
+        if ($class->hasConstant('COMPOSITE_'.strtoupper($mode))) {
             $baseImg    = $this->base->getImage();
             $overlayImg = $this->top->getImage();
 
@@ -79,13 +81,17 @@ class Blender
 
     public function opacityPixel($bottom, $top, $opacity = 1)
     {
-        $opacity = max(min($opacity,1),0);
-        if($opacity == 1) return $top;
-        if($opacity == 0) return $bottom;
+        $opacity = max(min($opacity, 1), 0);
+        if ($opacity == 1) {
+            return $top;
+        }
+        if ($opacity == 0) {
+            return $bottom;
+        }
 
         $left  = 1-$opacity;
         $right = $opacity;
-        foreach($bottom as $color => &$value){
+        foreach ($bottom as $color => &$value) {
             $value = (($value * $left) + ($top[$color] * $right));
         }
         return $bottom;
@@ -103,8 +109,7 @@ class Blender
                 'blue'  => $color & 0xFF,
                 'alpha' => ($color & 0x7F000000) >> 24,
             );
-        }
-        // If the image uses indexed color, we can get the color components by looking up
+        } // If the image uses indexed color, we can get the color components by looking up
         // the color index in the image's color table.
         else {
             $color = imagecolorsforindex($img, $color);
@@ -119,7 +124,7 @@ class Blender
 
         // If we failed to allocate the color, try to find the already allocated color
         // that is closest to what we want.
-        if ($colorIndex === FALSE) {
+        if ($colorIndex === false) {
             $colorIndex = imagecolorclosestalpha($img, $color['red'], $color['green'], $color['blue'], $color['alpha']);
         }
 
@@ -141,13 +146,19 @@ class Blender
         $min = min($pixel['red'], $pixel['green'], $pixel['blue']);
         $h = $s = $l = ($max + $min) / 2;
 
-        if($max !== $min) {
+        if ($max !== $min) {
             $d = $max - $min;
             $s = $l > 0.5 ? $d / (2 - $max - $min) : $d / ($max + $min);
-            switch($max) {
-                case $pixel['red']:   $h = ($pixel['green'] -  $pixel['blue']) / $d + ($pixel['green'] < $pixel['blue'] ? 6 : 0); break;
-                case $pixel['green']: $h = ($pixel['blue']  -   $pixel['red']) / $d + 2; break;
-                case $pixel['blue']:  $h = ($pixel['red']   - $pixel['green']) / $d + 4; break;
+            switch ($max) {
+                case $pixel['red']:
+                    $h = ($pixel['green'] -  $pixel['blue']) / $d + ($pixel['green'] < $pixel['blue'] ? 6 : 0);
+                    break;
+                case $pixel['green']:
+                    $h = ($pixel['blue']  -   $pixel['red']) / $d + 2;
+                    break;
+                case $pixel['blue']:
+                    $h = ($pixel['red']   - $pixel['green']) / $d + 4;
+                    break;
             }
             $h /= 6;
         } else {
@@ -168,7 +179,7 @@ class Blender
      */
     public function hslToRgb($pixel)
     {
-        if($pixel['saturation'] !== 0) {
+        if ($pixel['saturation'] !== 0) {
             $q = $pixel['luminance'] < 0.5 ? $pixel['luminance'] * (1 + $pixel['saturation']) : $pixel['luminance'] + $pixel['saturation'] - $pixel['luminance'] * $pixel['saturation'];
             $p = 2 * $pixel['luminance'] - $q;
             $r = $this->hueToRgb($p, $q, $pixel['hue'] + 1/3);
@@ -183,11 +194,21 @@ class Blender
 
     public function hueToRgb($p, $q, $t)
     {
-        if($t < 0) $t += 1;
-        if($t > 1) $t -= 1;
-        if($t < (1/6)) return $p + ($q - $p) * 6 * $t;
-        if($t < (1/2)) return $q;
-        if($t < (2/3)) return $p + ($q - $p) * (2/3 - $t) * 6;
+        if ($t < 0) {
+            $t += 1;
+        }
+        if ($t > 1) {
+            $t -= 1;
+        }
+        if ($t < (1/6)) {
+            return $p + ($q - $p) * 6 * $t;
+        }
+        if ($t < (1/2)) {
+            return $q;
+        }
+        if ($t < (2/3)) {
+            return $p + ($q - $p) * (2/3 - $t) * 6;
+        }
         return $p;
     }
 }

@@ -5,9 +5,9 @@ class Hue extends \Manticorp\Image\Blender
 {
     public function _blend($opacity = 1, $fill = 1)
     {
-        $opacity = min(max($opacity,0),1);
+        $opacity = min(max($opacity, 0), 1);
 
-        if($opacity === 0){
+        if ($opacity === 0) {
             return $this->base->getImage();
         }
 
@@ -36,17 +36,17 @@ class Hue extends \Manticorp\Image\Blender
                 $destHsl = $this->rgbToHsl($destColor);
                 $topHsl  = $this->rgbToHsl($topColor);
                 $destHsl = array('hue' => $topHsl['hue'], 'saturation' => $destHsl['saturation'], 'luminance' => $destHsl['luminance']);
-                if($topHsl['hue'] == 0 && $topHsl['saturation'] == 0){
+                if ($topHsl['hue'] == 0 && $topHsl['saturation'] == 0) {
                     $destHsl['saturation'] = 0;
                 }
 
                 $destColor = array_merge($this->hslToRgb($destHsl), array('alpha' => $destColor['alpha']));
 
-                if($opacity !== 1) {
+                if ($opacity !== 1) {
                     $destColor = $this->opacityPixel($baseColor, $destColor, $opacity);
                 }
                 // ...I wonder if this will work...
-                if($topColor['alpha'] != 0) {
+                if ($topColor['alpha'] != 0) {
                     $destColor = $this->opacityPixel($baseColor, $destColor, 1-$topColor['alpha']);
                 }
 
@@ -55,7 +55,8 @@ class Hue extends \Manticorp\Image\Blender
                 // Now that we have a valid color index, set the pixel to that color.
                 imagesetpixel(
                     $baseImg,
-                    $x + $destX, $y + $destY,
+                    $x + $destX,
+                    $y + $destY,
                     $this->getColorIndex($baseImg, $destColor)
                 );
             }
