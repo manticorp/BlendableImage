@@ -325,12 +325,13 @@ class Image
         }
 
         $url = (!is_null($url)) ?:$this->outputFn;
+        $attributes = (!is_null($attributes)) ?: array();
 
         $attributeString = '';
         foreach ($attributes as $key => $val) {
             $attributeString .= ' ' . $key . '="' .$val . '"';
         }
-        return '<img src="' . $url . '"' . $attributes . ' />'.PHP_EOL;
+        return '<img src="' . $url . '"' . $attributeString . ' />'.PHP_EOL;
     }
 
     public function blob($withHeaders = true)

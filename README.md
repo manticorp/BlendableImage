@@ -104,6 +104,8 @@ echo $base;
 
 ## Available blending modes
 
+**Bold** = Photoshop based.
+
 * Add
 * Atop
 * Blend
@@ -111,9 +113,9 @@ echo $base;
 * BumpMap
 * ChangeMask
 * Clear
-* Color
-* ColorBurn
-* ColorDodge
+* **Color**
+* **ColorBurn**
+* **ColorDodge**
 * Colorize
 * Copy
 * CopyBlack
@@ -124,15 +126,15 @@ echo $base;
 * CopyOpacity
 * CopyRed
 * CopyYellow
-* Darken
+* **Darken**
 * DarkenIntensity
-* DarkerColor
+* **DarkerColor**
 * Default
 * Difference
 * Displace
 * Dissolve
 * Distort
-* Divide
+* **Divide**
 * DivideDST
 * DivideSrc
 * DST
@@ -141,18 +143,18 @@ echo $base;
 * DSTout
 * DSTover
 * Exclusion
-* HardLight
-* HardMix
-* Hue
+* **HardLight**
+* **HardMix**
+* **Hue**
 * In
-* Lighten
+* **Lighten**
 * LightenIntensity
-* LighterColor
-* LinearBurn
-* LinearDodge
-* LinearLight
+* **LighterColor**
+* **LinearBurn**
+* **LinearDodge**
+* **LinearLight**
 * Luminize
-* Luminosity
+* **Luminosity**
 * Mathematics
 * Minus
 * MinusDST
@@ -160,27 +162,27 @@ echo $base;
 * Modulate
 * ModulusAdd
 * ModulusSubtract
-* Multiply
+* **Multiply**
 * No
-* Normal
+* **Normal**
 * Out
 * Over
-* Overlay
+* **Overlay**
 * Pegtoplight
-* PinLight
+* **PinLight**
 * Plus
 * Replace
 * Saturate
-* Saturation
-* Screen
-* SoftLight
+* **Saturation**
+* **Screen**
+* **SoftLight**
 * Src
 * SrcAtop
 * SrcIn
 * SrcOut
 * SrcOver
-* Subtract
+* **Subtract**
 * Threshold
 * Undefined
-* VividLight
+* **VividLight**
 * Xor
