@@ -67,7 +67,7 @@ class Image
 
     public function __clone()
     {
-        $this->image = $this->getImageResource($this->fn);
+        $this->image = clone $this->image;
     }
 
     public static function hasImagick()
