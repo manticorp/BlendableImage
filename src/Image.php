@@ -166,6 +166,9 @@ class Image
                 $this->isTrueColor    = imageistruecolor($this->image);
                 $this->originalWidth  = imagesx($this->image);
                 $this->originalHeight = imagesy($this->image);
+            } else {
+                $this->originalWidth  = $this->image->getImageWidth();
+                $this->originalHeight = $this->image->getImageHeight();
             }
         }
         return $this;
@@ -325,12 +328,13 @@ class Image
         }
 
         $url = (!is_null($url)) ?:$this->outputFn;
+        $attributes = (!is_null($attributes)) ?: array();
 
         $attributeString = '';
         foreach ($attributes as $key => $val) {
             $attributeString .= ' ' . $key . '="' .$val . '"';
         }
-        return '<img src="' . $url . '"' . $attributes . ' />'.PHP_EOL;
+        return '<img src="' . $url . '"' . $attributeString . ' />'.PHP_EOL;
     }
 
     public function blob($withHeaders = true)
