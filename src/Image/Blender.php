@@ -14,7 +14,7 @@ class Blender
         $this->top  = clone $top;
     }
 
-    public function blend($opacity = 1, $fill = 1)
+    public function blend($opacity = 1, $fill = 1, $options = array())
     {
         if ($this->hasImagick) {
             if (method_exists($this, '_imagickBlend')) {
@@ -27,12 +27,27 @@ class Blender
         }
     }
 
-    public function _blend($opacity = 1, $fill = 1)
+    public function _imagickBlend($opacity = 1, $fill = 1, $options = array())
+    {
+        $baseImg    = $this->base->getImage();
+        $overlayImg = $this->top->getImage();
+
+        $overlayImg->setImageOpacity($opacity);
+
+        $method = explode("\\",get_class($this));
+        $method = strtoupper(array_pop($method));
+
+        $baseImg->compositeImage($overlayImg, constant('\Imagick::COMPOSITE_'.strtoupper($method)), $options['offsetx'], $options['offsety']);
+
+        return $baseImg;
+    }
+
+    public function _blend($opacity = 1, $fill = 1, $options = array())
     {
         return $this->base;
     }
 
-    public function genericBlend($opacity = 1, $fill = 1, $mode = 'COPY')
+    public function genericBlend($opacity = 1, $fill = 1, $mode = 'COPY', $options = array())
     {
         $class = new \ReflectionClass("\Imagick");
         if ($class->hasConstant('COMPOSITE_'.strtoupper($mode))) {
@@ -41,7 +56,7 @@ class Blender
 
             $overlayImg->setImageOpacity($opacity);
 
-            $baseImg->compositeImage($overlayImg, constant('\Imagick::COMPOSITE_'.strtoupper($mode)), 0, 0);
+            $baseImg->compositeImage($overlayImg, constant('\Imagick::COMPOSITE_'.strtoupper($mode)), $options['botx'], $options['boty']);
         } else {
             throw new \InvalidArgumentException('Blending mode ' . $mode . ' not available using Imagick');
             return null;

@@ -17,6 +17,11 @@ class Image
     private $hasChanged  = true;
     public $hasImagick;
 
+    private $defaultBlendOptions = array(
+        'offsetx' => 0,
+        'offsety' => 0
+    );
+
     private $allowedFileTypes = array(
         'png'   => 'png',
         'jpeg'  => 'jpeg',
@@ -185,8 +190,11 @@ class Image
      * @param  number  $fill    Fill to use for top layer
      * @return \Image           This
      */
-    public function blendWith(\Manticorp\Image $image, $mode = 'normal', $opacity = 1, $fill = 1)
+    public function blendWith(\Manticorp\Image $image, $mode = 'normal', $opacity = 1, $fill = 1, $options = array())
     {
+        $defaults = $this->defaultBlendOptions;
+        $options = $this->updateOptions($defaults,$options);
+
         if (is_numeric($mode)) {
             $fill = $opacity;
             $opacity = $mode;
@@ -196,14 +204,24 @@ class Image
         $class = '\\Manticorp\\Image\\Blender\\'.$mode;
         if (class_exists($class)) {
             $blender = new $class($this, $image);
-            $this->setImage($blender->blend($opacity, $fill));
+            $this->setImage($blender->blend($opacity, $fill, $options));
         } else if ($this->hasImagick) {
             $blender = new Image\Blender($this, $image);
-            $this->setImage($blender->genericBlend($opacity, $fill, $mode));
+            $this->setImage($blender->genericBlend($opacity, $fill, $mode, $options));
         } else {
             throw new \InvalidArgumentException('Blending mode ' . $mode . ' not available using GD image library');
         }
         return $this->changed();
+    }
+
+    private function updateOptions($dest, $over)
+    {
+        foreach($over as $name => $val){
+            if(isset($dest[$name])){
+                $dest[$name] = $val;
+            }
+        }
+        return $dest;
     }
 
     /**

@@ -3,7 +3,7 @@ namespace Manticorp\Image\Blender;
 
 class HardMix extends \Manticorp\Image\Blender
 {
-    public function _blend($opacity = 1, $fill = 1)
+    public function _blend($opacity = 1, $fill = 1, $options = array())
     {
         $opacity = min(max($opacity, 0), 1);
 
@@ -62,14 +62,14 @@ class HardMix extends \Manticorp\Image\Blender
     /**
      * @todo Implement....
      */
-    public function _imagickBlend($opacity = 1, $fill = 1)
+    public function _imagickBlend($opacity = 1, $fill = 1, $options = array())
     {
         $baseImg    = $this->base->getImage();
         $overlayImg = $this->top->getImage();
 
         // $overlayImg->setImageOpacity($opacity);
 
-        // $baseImg->compositeImage($overlayImg, \Imagick::COMPOSITE_K, 0, 0);
+        // $baseImg->compositeImage($overlayImg, \Imagick::COMPOSITE_K, $options['offsetx'], $options['offsety']);
 
         return $baseImg;
     }

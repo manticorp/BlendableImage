@@ -3,7 +3,7 @@ namespace Manticorp\Image\Blender;
 
 class Luminosity extends \Manticorp\Image\Blender
 {
-    public function _blend($opacity = 1, $fill = 1)
+    public function _blend($opacity = 1, $fill = 1, $options = array())
     {
         $opacity = min(max($opacity, 0), 1);
 
@@ -58,18 +58,6 @@ class Luminosity extends \Manticorp\Image\Blender
                 );
             }
         }
-
-        return $baseImg;
-    }
-
-    public function _imagickBlend($opacity = 1, $fill = 1)
-    {
-        $baseImg    = $this->base->getImage();
-        $overlayImg = $this->top->getImage();
-
-        $overlayImg->setImageOpacity($opacity);
-
-        $baseImg->compositeImage($overlayImg, \Imagick::COMPOSITE_LUMINIZE, 0, 0);
 
         return $baseImg;
     }

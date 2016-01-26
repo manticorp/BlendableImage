@@ -3,7 +3,7 @@ namespace Manticorp\Image\Blender;
 
 class Overlay extends \Manticorp\Image\Blender
 {
-    public function _blend($opacity = 1, $fill = 1)
+    public function _blend($opacity = 1, $fill = 1, $options = array())
     {
         // OVERLAY MODE {
         $destX = ($this->base->getWidth()  - $this->top->getWidth() ) / 2;
@@ -26,18 +26,6 @@ class Overlay extends \Manticorp\Image\Blender
             $this->base->getHeight()
         );
         // } OVERLAY
-        return $baseImg;
-    }
-
-    public function _imagickBlend($opacity = 1, $fill = 1)
-    {
-        $baseImg    = $this->base->getImage();
-        $overlayImg = $this->top->getImage();
-
-        $overlayImg->setImageOpacity($opacity);
-
-        $baseImg->compositeImage($overlayImg, \Imagick::COMPOSITE_OVERLAY, 0, 0);
-
         return $baseImg;
     }
 }
