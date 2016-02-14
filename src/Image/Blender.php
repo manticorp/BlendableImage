@@ -56,6 +56,12 @@ class Blender
 
             $overlayImg->setImageOpacity($opacity);
 
+            if(!isset($options['botx'])) {
+                $options['botx'] = 0;
+            }
+            if(!isset($options['boty'])) {
+                $options['boty'] = 0;
+            }
             $baseImg->compositeImage($overlayImg, constant('\Imagick::COMPOSITE_'.strtoupper($mode)), $options['botx'], $options['boty']);
         } else {
             throw new \InvalidArgumentException('Blending mode ' . $mode . ' not available using Imagick');
