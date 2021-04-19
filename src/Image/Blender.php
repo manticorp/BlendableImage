@@ -32,7 +32,11 @@ class Blender
         $baseImg    = $this->base->getImage();
         $overlayImg = $this->top->getImage();
 
-        $overlayImg->setImageOpacity($opacity);
+        if (method_exists($overlayImg, 'setImageAlpha')) {
+			$overlayImg->setImageAlpha($opacity);
+		} else {
+			$overlayImg->setImageOpacity($opacity);
+		}
 
         $method = explode("\\",get_class($this));
         $method = strtoupper(array_pop($method));
@@ -54,9 +58,13 @@ class Blender
             $baseImg    = $this->base->getImage();
             $overlayImg = $this->top->getImage();
 
-            $overlayImg->setImageOpacity($opacity);
+			if (method_exists($overlayImg, 'setImageAlpha')) {
+				$overlayImg->setImageAlpha($opacity);
+			} else {
+				$overlayImg->setImageOpacity($opacity);
+			}
 
-            if(!isset($options['botx'])) {
+			if(!isset($options['botx'])) {
                 $options['botx'] = 0;
             }
             if(!isset($options['boty'])) {
