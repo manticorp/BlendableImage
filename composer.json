@@ -1,6 +1,6 @@
 {
-    "name": "manticorp/image",
-    "description": "Image library for layer like blending of images in PHP",
+    "name": "cjrasmussen/blendable-image",
+    "description": "Temporary fork of manticorp/image",
     "require": {
         "php": ">=5.3.0"
     },
