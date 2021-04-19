@@ -62,9 +62,15 @@ class LighterColor extends \Manticorp\Image\Blender
         $baseImg    = $this->base->getImage();
         $overlayImg = $this->top->getImage();
 
-        // $overlayImg->setImageOpacity($opacity);
+		/*
+        if (method_exists($overlayImg, 'setImageAlpha')) {
+			$overlayImg->setImageAlpha($opacity);
+		} else {
+			$overlayImg->setImageOpacity($opacity);
+		}
+		*/
 
-        // $baseImg->compositeImage($overlayImg, \Imagick::COMPOSITE_T, $options['offsetx'], $options['offsety']);
+		// $baseImg->compositeImage($overlayImg, \Imagick::COMPOSITE_T, $options['offsetx'], $options['offsety']);
 
         return $baseImg;
     }
